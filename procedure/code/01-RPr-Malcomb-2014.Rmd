@@ -1349,8 +1349,57 @@ orfig5rast <- orfig5rast %>%
 # or is Re-scaled from 0 to 100 with (value - min)/(max - min)
 # it is also inverted, because higher blue values are less red
 rm(orvmin, orvmax)
-```
 
+# Visualize the raster using tmap
+tm_shape(orfig5rast) +
+  tm_raster(col = "orv") +
+  tm_layout(legend.show = TRUE, legend.position = c("right", "top")) # Position the legend on the right
+```
+```{r load-original-fig5}
+#attempt to reformat
+orfig5vect = 
+  read_sf(here(public_d, "georef_bg.gpkg"), 
+          layer="georef_bg") %>%
+  mutate(bg_mean = bmean + gmean)
+# load original georeferenced figure 5 data
+
+orfig5rast <- st_rasterize(orfig5vect["bg_mean"], template=blank)
+# convert mean of blue and green values into a raster using ta_final as a reference for raster
+# extent, cell size, CRS, etc.
+
+orvmin <- min(orfig5rast$bg_mean, na.rm=TRUE)
+ormax <- max(orfig5rast$bg_mean, na.rm=TRUE)
+orfig5rast <- orfig5rast %>% 
+  mutate(orv = (1 - (bg_mean - orvmin) / (ormax - orvmin)) * 100)
+# or is Re-scaled from 0 to 100 with (value - min)/(max - min)
+# it is also inverted, because higher blue values are less red
+rm(orvmin, orvmax)
+
+library(ggplot2)
+
+vuln_map <- ggplot() +
+  geom_raster(data = orfig5rast, aes(fill = orv)) +
+  scale_fill_gradient(
+    low = "#FFFF75",
+    high = "#CF4611",
+    breaks = c(0, 100),
+    labels = c("Lower Vulnerability", "Higher Vulnerability"),
+    na.value = "transparent",
+    guide = "colourbar",
+    limits = c(0, 100)
+  ) +
+  labs(title = "Your Vulnerability Study Title") +
+  theme_minimal() +
+  theme(
+    legend.title = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank()
+  ) +
+  coord_quickmap()
+
+print(vuln_map)
+
+```
 #### Compare vulnerability result
 
 ```{r compare-fig5, warning=FALSE, fig.width=4, fig.height=4}
@@ -1402,8 +1451,8 @@ range <- ceiling(max(abs(max(vulnerability_r$diffv, na.rm = TRUE)),
 vuln_diff_map = ggplot() +
   geom_stars(data = vulnerability_r["diffv"]) +
   scale_fill_gradient2(
-    low = "#e9a3c9",
-    high = "#beaed4",
+    low = "#7B3294",
+    high = "#FDAE61",
     breaks = c(-range,0,range),
     labels = c(paste0("-",range), "0", paste0(range)),
     na.value = "transparent",
@@ -1419,6 +1468,36 @@ vuln_diff_map = ggplot() +
   )
 
 vuln_diff_map
+```
+```{r vulnerability-difference-map}
+#test to change to tmap package 
+
+# find range of values for divergent color scheme
+range <- ceiling(max(abs(max(vulnerability_r$diffv, na.rm = TRUE)),
+             abs(min(vulnerability_r$diffv, na.rm = TRUE))))
+
+# map can be improved by:
+# switch colors to a Colorbrewer divergent scale
+# use grey for lat / long labels
+# switch to using tmap package
+# Convert your raster to a SpatialGridDataFrame
+vulnerability_sgdf <- as(vulnerability_r, "SpatialGridDataFrame")
+
+# Create a tmap object with tm_raster
+vuln_diff_map_tmap <- tm_shape(vulnerability_r) +
+  tm_raster(col = "diffv", palette = "PuOr", style = "cat",
+            breaks = c(-range, 0, range), 
+            title = "Vulnerability:\nReproduction - Original") +
+  tm_layout(title = "Vulnerability Difference Map", 
+            frame = FALSE, 
+            inner.margins = 0, 
+            legend.position = c("right", "bottom"),
+            legend.title.size = 0.8,
+            legend.text.size = 0.8,
+            scale = 1)  # Adjust scale as needed
+
+# Plot the tmap
+plot(vuln_diff_map_tmap)
 ```
 
 ```{r save-fig5-comparison-data}
