@@ -252,7 +252,7 @@ No date, version, or formal citation for this data is provided in the original s
 Traditional authorities (TAs) data can be downloaded from Database of Global Administrative Areas (GADM) version 2.8 at https://gadm.org/download_country_v2.html and unzipped.
 =======
 Traditional authorities (TAs) data can be downloaded from Database of Global Administrative Areas (GADM) version 2.8 at <https://gadm.org/download_country_v2.html> and unzipped.
->>>>>>> Stashed changes
+
 This data must be downloaded directly from GADM.
 While the data license permits free use of data for research purposes and publication, it does not permit redistribution.
 
@@ -1482,7 +1482,7 @@ Despite being portrayed as an easily replicable study, this study was neither ea
 
 Here are a few of the key areas in which the most uncertainty was encountered:
 
-First and foremost there is the epistemologically rooted uncertainty in how the original authors inconsistently define "vulnerability", "resilience", and "adaptive capacity". Depending on context, both "vulnerability" and "resilience" may refer only to the assets and access portion of the model or to the full model
+First and foremost there is the ontologically rooted uncertainty in how the original authors inconsistently define "vulnerability", "resilience", and "adaptive capacity". Depending on context, both "vulnerability" and "resilience" may refer only to the assets and access portion of the model or to the full model
 inclusive of adaptive capacity (assets and access), livelihood sensitivity, and exposure. There are also strong directionality issues with their use of these terms. In Figure 5. of the original study they title it Malawi Vulnerability to Climate Change defining the function Assets+Access+Livelihoods-Exposure, however the value of each factor is unclear therefore it is unclear whether the map is actually displaying vulnerability or perhaps resilience or adaptive capacity.  
 
 The data normalization process described in the original study is highly confusing. The original study describes how the data was quantiled into 5 classes with values from 0 to 5, however, a scale with a minimum of 0 and a maximum of 5 indicates 6 classes rather than 5. Even under the assumption that each indicator should be normalized into 5 classes, certain indicators had data that were not compatible with such a distribution. Four variables were described as (Y/N) nominal data (T1), for which it is not clear how to transform the data into ordinal data with more than two classes. A similar concern arises for the market access variable with three classes (Rural, Peri-urban, and
